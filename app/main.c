@@ -335,11 +335,11 @@ int main(void)
     scl.iData[1] = 25;
     CWM_SettingControl(SCL_ALGO_PROC_CONFIG, &scl);
 		
-	  /*查看malloc max*/
-    memset(&scl, 0, sizeof(scl));
-    scl.iData[0] = 1;
-    scl.iData[1] = 1;
-    CWM_SettingControl(SCL_LIB_DEBUG, &scl);	
+//	  /*查看malloc max*/
+//    memset(&scl, 0, sizeof(scl));
+//    scl.iData[0] = 1;
+//    scl.iData[1] = 1;
+//    CWM_SettingControl(SCL_LIB_DEBUG, &scl);	
 											
 		/* CWM_LibPostInit初始化 */
     CWM_LibPostInit(CWM_AP_SensorListen);
@@ -369,12 +369,6 @@ int main(void)
 
 		/* 打开log输出 */
     memset(&scl, 0, sizeof(scl));
-//    scl.iData[0] = 1;
-//    scl.iData[3] = 1+4+8;
-//    scl.iData[4] = 5;
-//		scl.iData[6] = -1-1-2-8-16;
-//		scl.iData[7] = -1;
-		
 		scl.iData[0] = 1;
     scl.iData[3] = 9;
     scl.iData[4] = 5;
@@ -385,7 +379,7 @@ int main(void)
 		/* 使能 request_sensor */
     CWM_Sensor_Enable(IDX_REQUEST_SENSOR);									
 
-		#ifdef base1001
+		#ifdef CWM_ACTIVITY_NORMAL
 		/* 开启1001模式 */
 		memset(&scl, 0, sizeof(scl));
     scl.iData[0] = 1;
@@ -448,7 +442,14 @@ int main(void)
 		scl.iData[5] = 0;
 		scl.iData[6] = 0;
 		CWM_SettingControl(SCL_DATE_TIME, &scl);
-		
+
+		#ifdef AR_Alert
+		memset(&scl, 0, sizeof(scl));
+		scl.iData[0] = 1;	
+		scl.iData[1] = 1;	
+		scl.iData[4] = 5;		//侦测时间默认10min ，设置 5 min
+		CWM_SettingControl(SCL_AR_ALERT_CONFIG, &scl);		
+		#endif	
 		
 		#ifdef fake_HR
 		/* 开启心率，基础卡路里计算*/
@@ -476,8 +477,35 @@ int main(void)
 		CWM_SettingControl(SCL_WM_CONFIG, &scl);
 		#endif
 		
-		#ifdef sedentary	
-		/* 久坐算法设置 */
+		#ifdef OFFBODY_DETECT
+		CWM_Sensor_Enable(IDX_OFFBODY_DETECT);
+		#endif		
+						
+		#ifdef WatchHandUp
+		memset(&scl, 0, sizeof(scl));
+		scl.iData[0] = 1;
+		scl.iData[1] = 4;
+		scl.iData[2] = 4;
+		scl.iData[3] = 4;
+		CWM_SettingControl(SCL_HAND_UPDOWN_CONFIG, &scl);		
+		CWM_Sensor_Enable(IDX_ALGO_WATCH_HANDUP);
+		#endif
+	
+		#ifdef Swim2002
+		memset(&scl, 0, sizeof(scl));
+    scl.iData[0] = 1;
+    scl.iData[1] = 25;
+		scl.iData[2] = 1;
+		scl.iData[3] = 1;
+		CWM_SettingControl(SCL_SWIM_CONFIG, &scl);
+		#endif		
+		
+		memset(&scl, 0, sizeof(scl));
+		scl.iData[0] = 1;		
+		scl.iData[1] = inactivity_mode;
+		CWM_SettingControl(SCL_SET_INACTIVITY_MODE, &scl);
+
+		#ifdef sedentary	 //久坐算法设置 
 		memset(&scl, 0, sizeof(scl));
 		scl.iData[0] = 1;	
 		scl.iData[1] = 20;	
@@ -491,37 +519,11 @@ int main(void)
 		memset(&scl, 0, sizeof(scl));
 		scl.iData[0] = 1;		
 		scl.iData[1] = 0;	
-		CWM_SettingControl(SCL_INACTIVITY_CONFIG, &scl);
-
-		//静态活动算法模式设定：1=久坐
-		memset(&scl, 0, sizeof(scl));
-		scl.iData[0] = 1;		
-		scl.iData[1] = 1;
-		//scl.iData[1] = 0;	//关闭静态活动算法
-		CWM_SettingControl(SCL_SET_INACTIVITY_MODE, &scl);
-
-		CWM_Sensor_Enable(IDX_ALGO_INACTIVITY_OUTPUT);	
+		CWM_SettingControl(SCL_INACTIVITY_CONFIG, &scl);	
 		#endif		
 						
-		#ifdef WatchHandUp
-		memset(&scl, 0, sizeof(scl));
-		scl.iData[0] = 1;
-		scl.iData[1] = 4;
-		scl.iData[2] = 4;
-		scl.iData[3] = 4;
-		CWM_SettingControl(SCL_HAND_UPDOWN_CONFIG, &scl);		
-		CWM_Sensor_Enable(IDX_ALGO_WATCH_HANDUP);
-		#endif
-		
-		#ifdef shake
-		CWM_Sensor_Enable(IDX_ALGO_SHAKE);
-		#endif
-	
-		#ifdef folling
-		CWM_Sensor_Enable(IDX_ALGO_FALLING);		
-		#endif		
-
-		#ifdef sleeping
+						
+		#ifdef sleeping	 //睡眠设置
 		memset(&scl, 0, sizeof(scl));
 		scl.iData[0] = 1;
 		scl.iData[2] = 0;
@@ -534,41 +536,47 @@ int main(void)
 		scl.iData[0] = 1;		
 		scl.iData[1] = 0;	
 		CWM_SettingControl(SCL_INACTIVITY_CONFIG, &scl);
-		
-		//静态活动算法模式设定：2=睡眠
-		memset(&scl, 0, sizeof(scl));
-		scl.iData[0] = 1;		
-		scl.iData[1] = 2;
-		//scl.iData[1] = 0;	//关闭静态活动算法
-		CWM_SettingControl(SCL_SET_INACTIVITY_MODE, &scl);
-		
-		//req_sleeping data 模式，不打断睡眠
-  	//memset(&scl, 0, sizeof(scl));
-	  //scl.iData[0] = 1;
-	  //scl.iData[1] = 0;
-	  //CWM_SettingControl(SCL_REQ_SLEEPING_DATA, &scl);	
-
-		CWM_Sensor_Enable(IDX_ALGO_INACTIVITY_OUTPUT);
-		
 		#endif	
-				
 		
-		#ifdef Swim2002
+		#ifdef Sedentary_and_Nap	 //久坐和睡眠				
 		memset(&scl, 0, sizeof(scl));
-    scl.iData[0] = 1;
-    scl.iData[1] = 25;
+		scl.iData[0] = 1;	
+		scl.iData[1] = 20;	
 		scl.iData[2] = 1;
 		scl.iData[3] = 1;
-		CWM_SettingControl(SCL_SWIM_CONFIG, &scl);
-		#endif		
-		
-		#ifdef OFFBODY_DETECT
-		CWM_Sensor_Enable(IDX_OFFBODY_DETECT);
-		memset(&csd, 0, sizeof(CustomSensorData));
-		csd.sensorType = CUSTOM_OFFBODY_DETECT;
-		csd.fData[0] = 0;
-		CWM_CustomSensorInput(&csd);	
+		scl.iData[4] = 3;		
+		scl.iData[5] = 1;
+		CWM_SettingControl(SCL_SEDENTARY, &scl);		
+
+		//静态活动算法模式，低杂讯和高杂讯
+		memset(&scl, 0, sizeof(scl));
+		scl.iData[0] = 1;		
+		scl.iData[1] = 0;	
+		CWM_SettingControl(SCL_INACTIVITY_CONFIG, &scl);	
 		#endif	
+		
+		#ifdef Nap	 //久坐和睡眠				
+		memset(&scl, 0, sizeof(scl));
+		scl.iData[0] = 1;	
+		scl.iData[1] = 20;	
+		scl.iData[2] = 1;
+		scl.iData[3] = 1;
+		scl.iData[4] = 3;		
+		scl.iData[5] = 1;
+		CWM_SettingControl(SCL_SEDENTARY, &scl);		
+
+		//静态活动算法模式，低杂讯和高杂讯
+		memset(&scl, 0, sizeof(scl));
+		scl.iData[0] = 1;		
+		scl.iData[1] = 0;	
+		CWM_SettingControl(SCL_INACTIVITY_CONFIG, &scl);	
+		#endif			
+	
+		CWM_Sensor_Enable(IDX_ALGO_INACTIVITY_OUTPUT);		
+		
+
+
+
 		
 		/* Enable ALGO输出*/
 		CWM_Sensor_Enable(IDX_ALGO_ACTIVITY_OUTPUT);
@@ -582,7 +590,7 @@ int main(void)
 			lsm6dso_fifo_tag_t reg_tag;
 			axis3bit16_t dummy;
 			
-			int64_t next_duration = CWM_GetNextActionDuration_ns();
+			//int64_t next_duration = CWM_GetNextActionDuration_ns();
 					
 			/* Read watermark flag */
 			lsm6dso_fifo_wtm_flag_get(&dev_ctx, &wmflag);			
@@ -659,41 +667,49 @@ int main(void)
 									break;
 								
 							}
-							/* CWM FIFO END*/
-							CWM_CustomSensorInput_Fifo_End(CUSTOM_GYRO);
-							CWM_CustomSensorInput_Fifo_End(CUSTOM_ACC);
-							
-							#ifdef fake_HR
-							memset(&csd, 0, sizeof(CustomSensorData));
-							csd.sensorType = CUSTOM_HEARTRATE;
-							csd.fData[0] = rand() % 10 + 80;
-							CWM_CustomSensorInput(&csd);
-							#endif
-						
-							#ifdef fake_BARO
-							memset(&csd, 0, sizeof(CustomSensorData));
-							csd.sensorType = CUSTOM_BARO;
-							csd.fData[0] = rand() % 10 + 1010;
-							csd.fData[1] = 1;
-							csd.fData[2] = 23;
-							CWM_CustomSensorInput(&csd);
-							#endif
-	
 
 		
-						
-
-							
+					
 					}
+					/* CWM FIFO END*/
+					CWM_CustomSensorInput_Fifo_End(CUSTOM_GYRO);
+					CWM_CustomSensorInput_Fifo_End(CUSTOM_ACC);				
 
+					
+					#ifdef fake_HR
+					memset(&csd, 0, sizeof(CustomSensorData));
+					csd.sensorType = CUSTOM_HEARTRATE;
+					csd.fData[0] = rand() % 10 + 80;
+					CWM_CustomSensorInput(&csd);
+					#endif
+				
+					#ifdef fake_BARO
+					memset(&csd, 0, sizeof(CustomSensorData));
+					csd.sensorType = CUSTOM_BARO;
+					csd.fData[0] = rand() % 10 + 1010;
+					csd.fData[1] = 1;
+					csd.fData[2] = 23;
+					CWM_CustomSensorInput(&csd);
+					#endif
+					
+					#ifdef OFFBODY_DETECT
+					memset(&csd, 0, sizeof(CustomSensorData));
+					csd.sensorType = CUSTOM_OFFBODY_DETECT;
+					csd.fData[0] = 0;
+					CWM_CustomSensorInput(&csd);	
+					#endif
+					
 					/* 算法计算 */
 					CWM_process();					
 
-
+#if 0
 					//计算一轮FIFO输入的时间值
-//					uint64_t processTime;
-//					processTime = CWM_OS_GetTimeNs() / 1000000;
-//					CWM_OS_dbgPrintf("TS = %llu(ms)\n",processTime);					
+					uint64_t processTime;
+					processTime = CWM_OS_GetTimeNs() / 1000000;
+					CWM_OS_dbgPrintf("TS = %llu(ms)\n",processTime);		
+
+#endif			
+					
 		}					
   }
 }
