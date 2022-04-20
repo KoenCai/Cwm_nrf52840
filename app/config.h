@@ -3,6 +3,9 @@
 
 #define aikemu52832
 
+#define IMU_SCL_PIN    NRF_GPIO_PIN_MAP(1,14)
+#define IMU_SDA_PIN    NRF_GPIO_PIN_MAP(1,13)
+
 /*sensor—°‘Ò*/
 #define LSM6DSOW
 //#define ICM_42607

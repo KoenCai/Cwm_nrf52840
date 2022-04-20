@@ -236,6 +236,7 @@ int main(void)
 			.free       =  CWM_OS_free,
 			.GetTimeNs  =	 CWM_OS_GetTimeNs,
 			.dbgOutput  =  CWM_OS_dbgOutput,
+			
 		};
 
 		CustomSensorData csd;
