@@ -25,53 +25,39 @@
 //#define CWM_ACTIVITY_FREETRAINING									5001
 //#define CWM_ACTIVITY_WORKOUT_MACHINE							6001
 
-#if 1
-#define AR_Alert		//AR³¤Ê±¼äÔË¶¯Õì²â
-#endif
-
-#if 0
-#define extra_info		//extra infoÊä³ö 
-#endif
 
 
-#if 0
-#define fake_HR
-#define fake_BARO
-#endif
 
-#if 0
-//#define WatchHandUp      //Ì§ÍóÁÁÆÁ
-#endif
+/* extra infoÊä³ö  */
+//#define extra_info
+
+/* fake sensor data */
+//#define fake_HR
+//#define fake_BARO
+
+/*sensor enable */
+#define USE_ACC
+#define USE_GYRO
 
 
-#if 0
-#define nothing 						//²»¿ªÆô¾²Ì¬Ëã·¨
-#define inactivity_mode 0
-#endif
 
-#if 1
+/*set */
+//¾Ã×ø
+#define sedentary
 
-#define sedentary 					//¾Ã×ø
-#define inactivity_mode 1
-#endif
+//Ì§ÍóÁÁÆÁ
+//#define WatchHandUp
 
-#if 0
+//µøµ¹Ëã·¨
+//#define falling
 
-#define sleeping						//Ë¯Ãß
-#define inactivity_mode 2
-#endif
+//SHAKE
+//#define shake
 
-#if 0
+//Ë¯Ãß
+//#define sleeping
 
-#define Sedentary_and_Nap  //¾Ã×øºÍË¯Ãß
-#define inactivity_mode 3
-#endif
 
-#if 0
-
-#define Nap  								//Ğ¡Ë¯
-#define inactivity_mode 4
-#endif
 
 
 #endif //__CONFIG_H__

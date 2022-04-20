@@ -6,7 +6,7 @@
 
 void lsm6dso_init(void);
 void lsm6dso_getfifo(void);
-
+void readwhomi(uint16_t ID,uint16_t Address);
 
 
 
