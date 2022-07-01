@@ -8,8 +8,8 @@
 typedef int (*PFN_IRQHANDLE)(void *);
 
 typedef struct{
-    int (*i2cRead)(uint16_t slaveAddr, uint16_t reg, int regLength, uint8_t *readData, int readDataSize, int argument);
-    int (*i2cWrite)(uint16_t slaveAddr, uint16_t reg, int regLength, uint8_t *writeData, int writeDataSize, int argument);
+    int (*i2cRead)(uint16_t slaveAddr, uint16_t reg, int regLength, uint8_t *readData, int readDataSize, int busIndex);
+    int (*i2cWrite)(uint16_t slaveAddr, uint16_t reg, int regLength, uint8_t *writeData, int writeDataSize, int busIndex);
     void *(*malloc)(int size);
     void (*free)(void* ptr);
     uint64_t (*GetTimeNs)(void);
@@ -22,6 +22,10 @@ typedef struct{
     int (*setGpio)(uint16_t, uint16_t, uint16_t);
     int (*securityCodeWrite)(uint32_t, uint8_t*, uint32_t);
     int (*i2cTransfer)(uint16_t slaveAddr, uint16_t reg, int regLength, uint8_t *writeData, int writeDataSize, uint8_t *readData, int readDataSize, int argument);
+    int (*spiRead)(uint16_t reg, int regLength, uint8_t *readData, int readDataSize, int busIndex);
+    int (*spiWrite)(uint16_t reg, int regLength, uint8_t *writeData, int writeDataSize, int busIndex);
 } OsAPI, *pOsAPI;
+
+typedef OsAPI os_api;
 
 #endif /* __OS_API_H__ */

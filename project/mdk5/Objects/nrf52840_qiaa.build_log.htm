@@ -21,20 +21,24 @@ Target DLL:      Segger\JL2CM3.dll V2.99.40.0
 Dialog DLL:      TCM.DLL V1.53.0.0
  
 <h2>Project:</h2>
-D:\Koen_flie\code\nRF52840_project\CWM_nrf52840\project\mdk5\CWM_nrf52840.uvprojx
+D:\Koen_flie\code\git_Lib\cwm_nRF52840_watch\project\mdk5\CWM_nrf52840.uvprojx
 Project File Date:  04/07/2022
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'IK-52840DK'
+compiling board_nordic.c...
+compiling icm_42607_port.c...
+compiling cwm_lib_api.c...
 compiling main.c...
 ..\..\CWM_Release\Library\Inc\simulate_signal.h(27): warning:  #1295-D: Deprecated declaration init_simulate_time_axis - give arg types
   void init_simulate_time_axis();
 ..\..\CWM_Release\Library\Inc\simulate_signal.h(29): warning:  #1295-D: Deprecated declaration simulate_fake_get_time_ns - give arg types
   uint64_t simulate_fake_get_time_ns();
 ..\..\app\main.c: 2 warnings, 0 errors
+compiling sensor_init.c...
 linking...
-Program Size: Code=151744 RO-data=9252 RW-data=2164 ZI-data=41876  
+Program Size: Code=256704 RO-data=16836 RW-data=2344 ZI-data=66664  
 FromELF: creating hex file...
 ".\Objects\nrf52840_qiaa.axf" - 0 Error(s), 2 Warning(s).
 
@@ -62,11 +66,11 @@ Package Vendor: NordicSemiconductor
    * Component: ARM::CMSIS:CORE:5.3.0
 
    * Component: NordicSemiconductor::Device:Startup:8.35.0
-      Source file:   Device\Source\arm\arm_startup_nrf52840.s
       Source file:   Device\Source\system_nrf52840.c
       Include file:  Device\Include\system_nrf52840.h
       Include file:  Device\Include\system_nrf.h
-Build Time Elapsed:  00:00:03
+      Source file:   Device\Source\arm\arm_startup_nrf52840.s
+Build Time Elapsed:  00:00:04
 </pre>
 </body>
 </html>

@@ -1,6 +1,7 @@
 #include "sensor_init.h"
 #include "cwm_lib_api.h"
 #include "board_nordic.h"
+#include "config.h"
 #include "lsm6dso_reg.h"
 
 
@@ -28,17 +29,18 @@ static int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp, uint16_t 
 
 float acc_in[3] = {0};
 float gyr_in[3] = {0};
+int Sensor_ODR;
+int Acc_scale;
+int Gyro_scale;
 
-stmdev_ctx_t dev_ctx;
 
 void lsm6dso_init(void)
 {
-	   /* Initialize mems driver interface */
-		//stmdev_ctx_t dev_ctx;
+    /* Initialize mems driver interface */
+		stmdev_ctx_t dev_ctx;
     dev_ctx.write_reg = platform_write;
     dev_ctx.read_reg = platform_read;
-    dev_ctx.handle = NULL;	
-	
+    dev_ctx.handle = NULL;
 
 	
 		/* 检查设备ID */
@@ -46,8 +48,8 @@ void lsm6dso_init(void)
     if (whoamI != LSM6DSO_ID)
         while (1)
             ;
-		printf("LSM6DSO Sensor ID： %d \r\n",LSM6DSO_ID);
-		nrf_delay_ms(1000);	
+		printf("LSM6DSO Sensor ID： %x \r\n",LSM6DSO_ID);
+		nrf_delay_ms(200);	
 				
     /* LSM6DSOW reset配置 */
     lsm6dso_reset_set(&dev_ctx, PROPERTY_ENABLE);
@@ -73,11 +75,10 @@ void lsm6dso_init(void)
     lsm6dso_xl_data_rate_set(&dev_ctx, LSM6DSO_XL_ODR_52Hz);
 		
 		/* 设置输出 陀螺仪ODR 为26Hz */
-    lsm6dso_gy_data_rate_set(&dev_ctx, LSM6DSO_GY_ODR_52Hz);
-		
+    lsm6dso_gy_data_rate_set(&dev_ctx, LSM6DSO_GY_ODR_52Hz);		
 		
     /* 设置 FIFO watermark (number of unread sensor data TAG + 6 bytes stored in FIFO) to 10 samples （set val = 20 -> COUNT = 10 )*/
-    lsm6dso_fifo_watermark_set(&dev_ctx, 20);
+    lsm6dso_fifo_watermark_set(&dev_ctx, 2*SEN_FIFO_COUNT);
 
     /* 设置 加速度计 FIFO ODR为26Hz */
     lsm6dso_fifo_xl_batch_set(&dev_ctx, LSM6DSO_XL_BATCHED_AT_52Hz);
@@ -94,17 +95,25 @@ void lsm6dso_init(void)
 
 void lsm6dso_getfifo(void)
 {
+	/* Initialize mems driver interface */
+	stmdev_ctx_t dev_ctx;
+	dev_ctx.write_reg = platform_write;
+	dev_ctx.read_reg = platform_read;
+	dev_ctx.handle = NULL;
+	
 	uint8_t wmflag = 0;
 	uint16_t num = 0;
 	lsm6dso_fifo_tag_t reg_tag;
 	axis3bit16_t dummy;
-	
-	lsm6dso_fifo_wtm_flag_get(&dev_ctx, &wmflag);	
+
+	lsm6dso_fifo_wtm_flag_get(&dev_ctx, &wmflag);
+	//printf("wmflag = %d\n",wmflag);
 	if (wmflag > 0)
 	{
 		lsm6dso_fifo_data_level_get(&dev_ctx, &num);	
-		Cwm_fifo_start(CUSTOM_ACC,20);
-		Cwm_fifo_start(CUSTOM_GYRO,20);
+		Cwm_fifo_start(CUSTOM_ACC,19440);
+		Cwm_fifo_start(CUSTOM_GYRO,19440);
+
 		
 		while(num--)
 		{
@@ -120,8 +129,7 @@ void lsm6dso_getfifo(void)
 
 					acc_in[0] = (float)acceleration_mg[0] * 9.81f / 1000;
 					acc_in[1] = (float)acceleration_mg[1] * 9.81f / 1000;
-					acc_in[2] = (float)acceleration_mg[2] * 9.81f / 1000;
-								
+					acc_in[2] = (float)acceleration_mg[2] * 9.81f / 1000;			
 					DataInput(CUSTOM_ACC,acc_in[0],acc_in[1],acc_in[2]);
 
 					break;
@@ -135,10 +143,9 @@ void lsm6dso_getfifo(void)
 
 					gyr_in[0] = (float)angular_rate_mdps[0] * 3.1416f / 180 / 1000;
 					gyr_in[1] = (float)angular_rate_mdps[1] * 3.1416f / 180 / 1000;
-					gyr_in[2] = (float)angular_rate_mdps[2] * 3.1416f / 180 / 1000;
-								
+					gyr_in[2] = (float)angular_rate_mdps[2] * 3.1416f / 180 / 1000;		
 					DataInput(CUSTOM_GYRO,gyr_in[0],gyr_in[1],gyr_in[2]);
-				
+
 					break;
 			
 				default:
@@ -149,8 +156,9 @@ void lsm6dso_getfifo(void)
 			}		
 			Cwm_fifo_end(CUSTOM_GYRO);
 			Cwm_fifo_end(CUSTOM_ACC);
+	
 			
-			#ifdef fake_HR
+			#if fake_HR
 			memset(&csd, 0, sizeof(CustomSensorData));
 			csd.sensorType = CUSTOM_HEARTRATE;
 			csd.fData[0] = rand() % 10 + 80;
@@ -158,31 +166,74 @@ void lsm6dso_getfifo(void)
 			#endif
 									
 		}
-		CWM_process();				
+#if DataTime		
+    printf("Sensor DataTime:%llu(us)\n",getDTus());
+#endif	
+		
+#if processTime
+		static int64_t time = 0;
+		time = CWM_OS_GetTimeNs();		
+    CWM_process();
+		printf("CWM_process Time：%llu(us)\n",(CWM_OS_GetTimeNs()-time)/1000);
+#else 
+		CWM_process();
+#endif
+		
 	}
 	
 }
 
-void readwhomi(uint16_t ID,uint16_t Address)
-{
-		uint8_t whomi;
-		CWM_OS_i2cRead(ID,Address,1,&whomi,1);
-		CWM_OS_dbgPrintf("whomi = %d\r\n",whomi);
-}
 
+void test_process()
+{
+	nrf_delay_ms(20);
+	DataInput(CUSTOM_ACC,1,1,1);
+	DataInput(CUSTOM_GYRO,2,2,2);
+	CWM_process();
+}
+uint8_t readwhomi(uint16_t Device_ID,uint16_t Address)
+{
+	uint8_t whomi;
+	CWM_OS_i2cRead(Device_ID,Address,1,&whomi,1,100);
+	CWM_OS_uSleep(10);
+	//CWM_OS_dbgPrintf("whomi = %x\r\n",whomi);
+	return whomi;
+}
+int cheakwhomi(void)
+{
+	uint8_t whoami;
+	whoami= readwhomi(Device_ID1,whomi_Address);
+	if( whoami == sensor_whomi)
+	{
+		CWM_OS_dbgPrintf("Device_ID = 0x%x, whomi = 0x%x \r\n",Device_ID1,whoami);
+		return 0;
+	}
+	else
+		whoami = readwhomi(Device_ID2,whomi_Address);
+
+	if (whoami == sensor_whomi)
+	{	
+		CWM_OS_dbgPrintf("Device_ID = 0x%x, whomi = 0x%x \r\n",Device_ID2,whoami);
+		return 0;		
+	}
+	else
+	{
+		CWM_OS_dbgPrintf("Cant found device!\n");
+		return 1;
+	}
+}
 
 static int32_t platform_write(void *handle, uint8_t reg, uint8_t *bufp, uint16_t len)
 {
 		
-		CWM_OS_i2cWrite(LSM6DSO_I2C_ADD_H, reg, 1, bufp, (uint16_t)len);
+		CWM_OS_i2cWrite(LSM6DSO_I2C_ADD_H, reg, 1, bufp, (uint16_t)len,100);
 		return 0;
 }
 
 
 static int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp, uint16_t len)
 {
-		CWM_OS_i2cRead(LSM6DSO_I2C_ADD_H, reg, 1, bufp, (uint16_t)len);
+		CWM_OS_i2cRead(LSM6DSO_I2C_ADD_H, reg, 1, bufp, (uint16_t)len,100);
 		return 0;
 }
-
 

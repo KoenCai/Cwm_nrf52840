@@ -83,6 +83,7 @@
 .\objects\cwm_lib_api.o: ..\..\integration\nrfx\legacy\nrf_drv_rtc.h
 .\objects\cwm_lib_api.o: ..\..\modules\nrfx\drivers\include\nrfx_rtc.h
 .\objects\cwm_lib_api.o: ..\..\modules\nrfx\hal/nrf_rtc.h
+.\objects\cwm_lib_api.o: ..\..\app\cwm_lib_api.h
 .\objects\cwm_lib_api.o: ..\..\CWM_Release\Library\Inc\cwm_lib.h
 .\objects\cwm_lib_api.o: ..\..\CWM_Release\Library\Inc\CWM_EventStructure.h
 .\objects\cwm_lib_api.o: ..\..\CWM_Release\Library\Inc\OsApi.h

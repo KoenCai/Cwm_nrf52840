@@ -28,7 +28,7 @@ void put_imu_data(float *accel_g, float *gyro_dps)
     memcpy(data.fData, gyr_in, sizeof(float) *3);
     CWM_CustomSensorInput(&data);
 
-		CWM_process();
+		//CWM_process();
 
 }
 

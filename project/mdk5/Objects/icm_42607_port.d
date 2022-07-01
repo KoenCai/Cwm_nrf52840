@@ -83,8 +83,9 @@
 .\objects\icm_42607_port.o: ..\..\integration\nrfx\legacy\nrf_drv_rtc.h
 .\objects\icm_42607_port.o: ..\..\modules\nrfx\drivers\include\nrfx_rtc.h
 .\objects\icm_42607_port.o: ..\..\modules\nrfx\hal/nrf_rtc.h
+.\objects\icm_42607_port.o: ..\..\app\cwm_lib_api.h
+.\objects\icm_42607_port.o: ..\..\app\board_nordic.h
 .\objects\icm_42607_port.o: ..\..\CWM_Release\Library\Inc\cwm_lib.h
 .\objects\icm_42607_port.o: ..\..\CWM_Release\Library\Inc\CWM_EventStructure.h
 .\objects\icm_42607_port.o: ..\..\CWM_Release\Library\Inc\OsApi.h
 .\objects\icm_42607_port.o: ..\..\CWM_Release\Library\Inc\CWM_CustomDataStruct.h
-.\objects\icm_42607_port.o: ..\..\app\cwm_lib_api.h

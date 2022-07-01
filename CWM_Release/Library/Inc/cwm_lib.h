@@ -44,12 +44,17 @@
 #define SCL_REQ_ACTIVITY_EXIT   31
 
 #define SCL_SZ_BREACH_CONFIG    50
-#define SCL_ACT_INTSY_CONFIG    51
+#define SCL_WASH_HAND_CONFIG    52
 
 #define SCL_ALGO_PROC_CONFIG    100
+#define SCL_INPUT_SENSOR_CONFIG 101
+#define SCL_INPUT_DT_CONFIG     102
 #define SCL_SENS_CALI_CONFIG    110
 #define SCL_SENS_CALI_CTRL_MAG  111
 #define SCL_SENS_CALI_CTRL_A    112
+#define SCL_SPV_CONFIG          113
+#define SCL_SPV_MODE            114
+
 
 /**
   * @brief Custom Sensor Input sensorId
@@ -71,23 +76,6 @@
 #define CUSTOM_ACC_ANY_MOTION   9
 #define CUSTOM_SENS1            10
 
-/**
-  * @brief Sensor Gpio function settings
-  * @api CWM_OS_setGpio
-  * @param sensorPin
-  */
-#define PIN_INT1                    0
-#define PIN_INT2                    1
-#define PIN_VDD                     2
-#define PIN_RESET                   3
-#define PIN_CS                      4
-
-#define INT_TRIGGER_TYPE_RISING     0
-#define INT_TRIGGER_TYPE_FALLING    1
-
-#define INT_RESISTOR_PULLUP         0
-#define INT_RESISTOR_PULLDOWN       1
-#define INT_RESISTOR_NOPULL         2
 
 /**
   * @brief sensor enable/disable
@@ -113,6 +101,8 @@
 #define IDX_ALGO_FALLING             17
 #define IDX_ONCHARGING_DETECT        18
 #define IDX_ALGO_ABSOLUTE_STATIC     19
+#define IDX_ALGO_SPV                 20
+#define IDX_ALGO_SENS_CALIBRATION    21
 #define IDX_ALGO_INACTIVITY_OUTPUT   22
 #define IDX_ALGO_STAND               23
 
@@ -195,14 +185,6 @@ int64_t CWM_GetNextActionDuration_ns(void);
   * @retval 0 is success, otherwise is failed
   */
 int CWM_SettingControl(int CtrId, SettingControl_t *pData);
-
-/**
-  * @brief  set lib config by internal
-  * @param  Control ID
-  * @param  Setting control array
-  * @retval 0 is success, otherwise is failed
-  */
-int CWM_SettingControl_internal(int CtrId, SettingControl_t *pData);
 
 /**
   * @brief Fifo initial

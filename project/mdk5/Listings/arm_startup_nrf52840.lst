@@ -52,9 +52,9 @@ ARM Macro Assembler    Page 1
    44 00004000         __initial_sp
    45 00004000         
    46 00004000                 IF               :DEF: __STARTUP_CONFIG
-   51 00004000 00004000 
+   51 00004000 0000A000 
                        Heap_Size
-                               EQU              16384
+                               EQU              40960
    52 00004000                 ENDIF
    53 00004000         
    54 00004000                 AREA             HEAP, NOINIT, READWRITE, ALIGN=
@@ -62,20 +62,20 @@ ARM Macro Assembler    Page 1
    55 00000000         __heap_base
    56 00000000         Heap_Mem
                                SPACE            Heap_Size
-   57 00004000         __heap_limit
+   57 0000A000         __heap_limit
 
 
 
 ARM Macro Assembler    Page 2 
 
 
-   58 00004000         
-   59 00004000                 PRESERVE8
-   60 00004000                 THUMB
-   61 00004000         
-   62 00004000         ; Vector Table Mapped to Address 0 at Reset
-   63 00004000         
-   64 00004000                 AREA             RESET, DATA, READONLY
+   58 0000A000         
+   59 0000A000                 PRESERVE8
+   60 0000A000                 THUMB
+   61 0000A000         
+   62 0000A000         ; Vector Table Mapped to Address 0 at Reset
+   63 0000A000         
+   64 0000A000                 AREA             RESET, DATA, READONLY
    65 00000000                 EXPORT           __Vectors
    66 00000000                 EXPORT           __Vectors_End
    67 00000000                 EXPORT           __Vectors_Size
@@ -508,7 +508,7 @@ Symbol: __heap_base
    Uses
       At line 362 in file RTE\Device\nRF52840_xxAA\arm_startup_nrf52840.s
 Comment: __heap_base used once
-__heap_limit 00004000
+__heap_limit 0000A000
 
 Symbol: __heap_limit
    Definitions
@@ -1104,7 +1104,7 @@ Symbol: WDT_IRQHandler
 ARM Macro Assembler    Page 1 Alphabetic symbol ordering
 Absolute symbols
 
-Heap_Size 00004000
+Heap_Size 0000A000
 
 Symbol: Heap_Size
    Definitions

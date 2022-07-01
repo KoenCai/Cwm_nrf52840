@@ -87,6 +87,7 @@
 .\objects\main.o: ..\..\integration\nrfx\legacy\nrf_drv_rtc.h
 .\objects\main.o: ..\..\modules\nrfx\drivers\include\nrfx_rtc.h
 .\objects\main.o: ..\..\modules\nrfx\hal/nrf_rtc.h
+.\objects\main.o: ..\..\app\cwm_lib_api.h
 .\objects\main.o: ..\..\CWM_Release\Library\Inc\simulate_signal.h
 .\objects\main.o: ..\..\app\sensor_init.h
 .\objects\main.o: ..\..\app\lsm6dsow\lsm6dso_reg.h

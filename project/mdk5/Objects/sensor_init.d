@@ -84,6 +84,7 @@
 .\objects\sensor_init.o: ..\..\integration\nrfx\legacy\nrf_drv_rtc.h
 .\objects\sensor_init.o: ..\..\modules\nrfx\drivers\include\nrfx_rtc.h
 .\objects\sensor_init.o: ..\..\modules\nrfx\hal/nrf_rtc.h
+.\objects\sensor_init.o: ..\..\app\cwm_lib_api.h
 .\objects\sensor_init.o: ..\..\CWM_Release\Library\Inc\cwm_lib.h
 .\objects\sensor_init.o: ..\..\CWM_Release\Library\Inc\CWM_EventStructure.h
 .\objects\sensor_init.o: ..\..\CWM_Release\Library\Inc\OsApi.h
