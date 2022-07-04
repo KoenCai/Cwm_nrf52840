@@ -44,5 +44,6 @@ void DataInput(int SensorTyp,float data_x,float data_y,float data_z);
 void Cwm_fifo_start(int SensorTyp,int DTms);
 void Cwm_fifo_end(int SensorTyp);
 void anymotion(void);
+void test_api(void);
 
 #endif //__CWM_LIB_API_H__

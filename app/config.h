@@ -29,7 +29,8 @@
 /*Set Cwm_ODR*/
 #define CWM_ODR            (50)  				//£¨25£¨50£¨100 
 
-/* Debug infoÊä³ö  */
+/* Debug */
+#define TEST_API           (1)
 #define TEST_HOOK          (0)
 #define CWM_DEBUG          (0) 
 #define CHEAK_WHOMI        (1) 

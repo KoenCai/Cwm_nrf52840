@@ -26,6 +26,9 @@ int main(void)
 	cwm_init();
   while(1)
   {			
+#if TEST_API		
+		test_api();
+#else
 		//button_process();	
 		if(LPM_FLAG == 1 && Sixty_Sec_FLAG == 1)
 		{			
@@ -34,7 +37,7 @@ int main(void)
 		}
 		else if(LPM_FLAG==0)		
 			lsm6dso_getfifo();
-		
+#endif			
 	}
 
 }

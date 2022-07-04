@@ -27,8 +27,6 @@ Project File Date:  04/07/2022
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'IK-52840DK'
-compiling board_nordic.c...
-compiling icm_42607_port.c...
 compiling cwm_lib_api.c...
 compiling main.c...
 ..\..\CWM_Release\Library\Inc\simulate_signal.h(27): warning:  #1295-D: Deprecated declaration init_simulate_time_axis - give arg types
@@ -36,9 +34,8 @@ compiling main.c...
 ..\..\CWM_Release\Library\Inc\simulate_signal.h(29): warning:  #1295-D: Deprecated declaration simulate_fake_get_time_ns - give arg types
   uint64_t simulate_fake_get_time_ns();
 ..\..\app\main.c: 2 warnings, 0 errors
-compiling sensor_init.c...
 linking...
-Program Size: Code=256704 RO-data=16836 RW-data=2344 ZI-data=66664  
+Program Size: Code=256464 RO-data=16836 RW-data=2344 ZI-data=66616  
 FromELF: creating hex file...
 ".\Objects\nrf52840_qiaa.axf" - 0 Error(s), 2 Warning(s).
 
@@ -66,10 +63,10 @@ Package Vendor: NordicSemiconductor
    * Component: ARM::CMSIS:CORE:5.3.0
 
    * Component: NordicSemiconductor::Device:Startup:8.35.0
+      Source file:   Device\Source\arm\arm_startup_nrf52840.s
       Source file:   Device\Source\system_nrf52840.c
       Include file:  Device\Include\system_nrf52840.h
       Include file:  Device\Include\system_nrf.h
-      Source file:   Device\Source\arm\arm_startup_nrf52840.s
 Build Time Elapsed:  00:00:04
 </pre>
 </body>

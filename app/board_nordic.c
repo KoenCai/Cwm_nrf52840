@@ -48,7 +48,7 @@ static void one_sec_timer_handle(void *p_context)
 static void once_time_handle(void *p_context)
 {
     once_time_FLAG = 1;
-		printf("once_time_FLAG=%d\n",once_time_FLAG);
+		//printf("once_time_FLAG=%d\n",once_time_FLAG);
 }
 
 static void sixty_sec_timer_handle(void *p_context)
