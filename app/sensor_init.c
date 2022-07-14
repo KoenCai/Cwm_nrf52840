@@ -158,13 +158,9 @@ void lsm6dso_getfifo(void)
 			Cwm_fifo_end(CUSTOM_ACC);
 	
 			
-			#if fake_HR
-			memset(&csd, 0, sizeof(CustomSensorData));
-			csd.sensorType = CUSTOM_HEARTRATE;
-			csd.fData[0] = rand() % 10 + 80;
-			CWM_CustomSensorInput(&csd);
-			#endif
-									
+
+			
+				
 		}
 #if DataTime		
     printf("Sensor DataTime:%llu(us)\n",getDTus());

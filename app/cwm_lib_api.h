@@ -23,6 +23,7 @@
 #define CWM_ACTIVITY_OUTDOOR_BIKING								3001
 #define CWM_ACTIVITY_FREETRAINING									5001
 #define CWM_ACTIVITY_WORKOUT_MACHINE							6001
+#define CWM_ACTIVITY_RUNNING_GPS                  7001
 
 /* Inactivity Mode */
 #define CWM_INACTIVITY_SEDENTARY										1
@@ -41,6 +42,7 @@
 
 void cwm_init(void);
 void DataInput(int SensorTyp,float data_x,float data_y,float data_z);
+void DataInput2(int SensorTyp,double data_x,double data_y);
 void Cwm_fifo_start(int SensorTyp,int DTms);
 void Cwm_fifo_end(int SensorTyp);
 void anymotion(void);

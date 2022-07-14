@@ -35,6 +35,7 @@ static void systickUpdate()
 
 volatile uint16_t Sixty_Sec_FLAG = 0;
 volatile uint16_t once_time_FLAG = 0;
+volatile uint16_t once_sec_FLAG = 0;
 
 APP_TIMER_DEF(m_one_sec_timer);
 APP_TIMER_DEF(once_time_timer);
@@ -43,12 +44,13 @@ APP_TIMER_DEF(m_sixty_sec_timer);
 static void one_sec_timer_handle(void *p_context)
 {
     systickUpdate();
+		once_sec_FLAG = 1;
 }
 
 static void once_time_handle(void *p_context)
 {
     once_time_FLAG = 1;
-		//printf("once_time_FLAG=%d\n",once_time_FLAG);
+		printf("once_time_FLAG=%d\n",once_time_FLAG);
 }
 
 static void sixty_sec_timer_handle(void *p_context)

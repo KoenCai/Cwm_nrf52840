@@ -82,9 +82,12 @@ void CWM_LOG_CONFIG()
 	SettingControl_t scl;
 	memset(&scl, 0, sizeof(scl));
 	scl.iData[0] = 1;
-	scl.iData[3] = 9;
-	scl.iData[4] = 5;
+	scl.iData[3] = 9;//7+8;
+	scl.iData[4] = 2+5;//2+16+64;
+	//scl.iData[5] = 3+16;
+	//scl.iData[6] = -1 - 1 - 2 - 4 - 8 - 16 - 32 - 2048;
 	scl.iData[7] = -1;
+	scl.iData[9] = -1-64;
 	CWM_SettingControl(SCL_LOG, &scl);	
 }
 
@@ -113,7 +116,20 @@ void SET_CWM_ACTIVITY_SUB_MODE(int activity_mode,int sub_mode_number)
 	scl.iData[2] = sub_mode_number;
 	CWM_SettingControl(SCL_SET_ACTIVITY_MODE, &scl);
 }
-
+void CWM_ACTIVITY_CONFIG()
+{
+	SettingControl_t scl;
+	memset(&scl, 0, sizeof(scl));
+	scl.iData[0] = 1;
+	scl.iData[1] = 1;	//1：包含基础卡路里 2：不包含
+	scl.iData[2] = 2; //1：使用心率  2：不使用心率
+	scl.iData[3] = 2; //1：静态运动继续计算卡路里  2：静态运动不计算卡路里	
+	scl.iData[4] = 2; //1：运动模式脱表后继续计算卡路里  2：脱表后不计算卡路里	
+	scl.iData[5] = 2; //1：开启AR  2：关闭AR		
+	scl.iData[6] = 0; //0：AR计步优先模式 1：AR平衡模式  2：AR优先防误触模式		
+	CWM_SettingControl(SCL_SET_ACTIVITY_MODE, &scl);	
+	
+}
 void CWM_SWIM_CONFIG()
 {
 	SettingControl_t scl;
@@ -123,6 +139,16 @@ void CWM_SWIM_CONFIG()
 	scl.iData[2] = 1;
 	scl.iData[3] = 1;
 	CWM_SettingControl(SCL_SWIM_CONFIG, &scl);			
+}
+
+void CWM_BIKING_CONFIG()
+{
+	SettingControl_t scl;
+	memset(&scl, 0, sizeof(scl));
+	scl.iData[0] = 1;
+	scl.iData[1] = 2;//不发送
+	scl.iData[2] = 10;//gps超过时间距离不会增加
+	CWM_SettingControl(SCL_BIKING_CONFIG, &scl);		
 }
 
 void CWM_TIME_INIT()
@@ -238,6 +264,17 @@ void DataInput(int SensorTyp,float data_x,float data_y,float data_z)
 	csd.fData[1] = data_y;
 	csd.fData[2] = data_z;
 	CWM_CustomSensorInput(&csd);	
+}	
+
+void DataInput2(int SensorTyp,double data_x,double data_y)
+{
+	CustomSensorData csd;
+	memset(&csd, 0, sizeof(csd));
+	csd.sensorType = SensorTyp;
+	csd.dData[0] = data_x;
+	csd.dData[1] = data_y;
+	CWM_CustomSensorInput(&csd);
+	//CWM_process();	
 }	
 
 void Cwm_fifo_start(int SensorTyp,int DTus)
@@ -463,11 +500,12 @@ void cwm_init(void)
 		
 		/* 设置LOG输出 */
 		CWM_LOG_CONFIG();
-
+		
+		/* 运动输出设定 */
+		CWM_ACTIVITY_CONFIG();
 								
 #if NORMAL  
-		SET_CWM_ACTIVITY_MODE(CWM_ACTIVITY_NORMAL);
-		
+		SET_CWM_ACTIVITY_MODE(CWM_ACTIVITY_NORMAL);		
 #endif
 #if TREADMILL
 		SET_CWM_ACTIVITY_MODE(CWM_ACTIVITY_TREADMILL);
@@ -491,15 +529,19 @@ void cwm_init(void)
 		SET_CWM_ACTIVITY_MODE(CWM_ACTIVITY_FITNESS_PEDOMETER);	
 #endif
 #if INDOOR_SWIMMING
-		SET_CWM_ACTIVITY_MODE(CWM_ACTIVITY_INDOOR_SWIMMING);
-		CWM_SWIM_CONFIG();
+		CWM_SWIM_CONFIG();//在前
+		SET_CWM_ACTIVITY_MODE(CWM_ACTIVITY_INDOOR_SWIMMING);	
 #endif
 #if OPENWATER_SWIMMING
+		CWM_SWIM_CONFIG();//在前
 		SET_CWM_ACTIVITY_MODE(CWM_ACTIVITY_OPENWATER_SWIMMING);	
-		CWM_SWIM_CONFIG();
 #endif
 #if OUTDOOR_BIKING
+	  CWM_BIKING_CONFIG();
 		SET_CWM_ACTIVITY_MODE(CWM_ACTIVITY_OUTDOOR_BIKING);	
+#endif
+#if RUNNING_GPS
+		SET_CWM_ACTIVITY_MODE(CWM_ACTIVITY_RUNNING_GPS);	
 #endif
 #if BOXING
 		SET_CWM_ACTIVITY_SUB_MODE(CWM_ACTIVITY_WORKOUT_MACHINE,wm_boxing);	
@@ -532,7 +574,7 @@ void cwm_init(void)
 	else if(INACTIVITY_MODE == CWM_INACTIVITY_SLEEPING || INACTIVITY_MODE == CWM_INACTIVITY_SLEEPING_STAND)
 	{
 		/* 设置睡眠config */
-		 CWM_SLEEP_CONFIG();
+		CWM_SLEEP_CONFIG();
 	}
 	/* 设置静态运动模式 */
 	CWM_SET_INACTIVITY_MOD(INACTIVITY_MODE);

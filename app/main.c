@@ -12,6 +12,7 @@
 
 
 extern uint16_t LPM_FLAG;
+extern uint16_t once_sec_FLAG;
 extern uint16_t Sixty_Sec_FLAG;
 
 
@@ -36,7 +37,23 @@ int main(void)
 				Sixty_Sec_FLAG = 0;
 		}
 		else if(LPM_FLAG==0)		
-			lsm6dso_getfifo();
+		{
+
+			if(once_sec_FLAG==1)
+			{			
+#if fake_GPS				
+				DataInput2(CUSTOM_GNSS,22.123456,108.123456);
+#endif
+#if fake_HR
+				DataInput(CUSTOM_HEARTRATE,rand() % 10 + 80,0,0);	
+#endif				
+				once_sec_FLAG = 0;
+						
+			}
+
+		  lsm6dso_getfifo();
+		}
+
 #endif			
 	}
 
